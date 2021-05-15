@@ -11,7 +11,9 @@ concat('Hello ', 'World'); // -> Hello World;
 // Напиши интерфейс для описания следующих данных
 
 interface homeTaskInterface {
-  [el: string]: string | number | (string | number)[] | object;
+  howIDoIt: string;
+  simeArray: Array<string | number>;
+  withData: Array<object>;
 }
 
 const myHometask: homeTaskInterface = {
