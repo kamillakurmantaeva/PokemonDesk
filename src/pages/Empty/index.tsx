@@ -1,5 +1,7 @@
 import React from 'react';
-import Header from '../../components/Header';
+import Layout from '../../components/Layout';
+
+import s from './Empty.module.scss';
 
 interface EmptyPageProps {
   title?: string;
@@ -8,8 +10,9 @@ interface EmptyPageProps {
 const EmptyPage: React.FC<EmptyPageProps> = ({ title }) => {
   return (
     <div>
-      <Header />
-      <div>This is Empty Page for {title}</div>
+      <Layout className={s.layout}>
+        <div>This is Empty Page for {title}</div>
+      </Layout>
     </div>
   );
 };

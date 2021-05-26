@@ -1,7 +1,6 @@
 import React from 'react';
 import { navigate } from 'hookrouter';
 import Button from '../../components/Button';
-import Header from '../../components/Header';
 import Layout from '../../components/Layout';
 import Parallax from './components/Parallax';
 
@@ -11,7 +10,6 @@ import { LinkEnum } from '../../routes';
 const HomePage = () => {
   return (
     <div className={s.root}>
-      <Header />
       <Layout className={s.contentWrap}>
         <div className={s.contentText}>
           <h1>

@@ -2,7 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   root: string | undefined;
-  contentWrap: object | null;
+  contentWrap: string | object | null;
   contentText: string | undefined;
   contentParallax: string | undefined;
 }
