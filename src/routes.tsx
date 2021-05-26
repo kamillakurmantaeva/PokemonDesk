@@ -1,6 +1,9 @@
 import React from 'react';
 import EmptyPage from './pages/Empty';
+import HomePage from './pages/Home';
+import PokedexPage from './pages/Pokedex';
 
+// eslint-disable-next-line no-shadow
 export enum LinkEnum {
   HOME = '/',
   POKEDEX = '/pokedex',
@@ -18,12 +21,12 @@ export const GENERAL_MENU: IGeneralMenu[] = [
   {
     title: 'Home',
     link: LinkEnum.HOME,
-    component: () => <EmptyPage />,
+    component: () => <HomePage />,
   },
   {
     title: 'Pokédex',
     link: LinkEnum.POKEDEX,
-    component: () => <EmptyPage title="Pokedex" />,
+    component: () => <PokedexPage />,
   },
   {
     title: 'Legendaries',
