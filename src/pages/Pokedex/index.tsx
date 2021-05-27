@@ -3,19 +3,26 @@ import Heading from '../../components/Heading';
 import Layout from '../../components/Layout';
 import PokemonCard from '../../components/PokemonCard';
 import useData from '../../hook/getData';
+import useDebounce from '../../hook/useDebounce';
+import { IPokemons, PokemonsRequest } from '../../interface/pokemons';
 
 import s from './Pokedex.module.scss';
 
+interface IQuery {
+  name?: string;
+}
+
 const PokedexPage = () => {
   const [searchValue, setSearchValue] = useState('');
-  const [query, setQuery] = useState({});
+  const [query, setQuery] = useState<IQuery>({});
+  const debouncedValue = useDebounce(searchValue, 500);
 
-  const { data, isLoading, isError } = useData('getPokemons', query, [searchValue]);
+  const { data, isLoading, isError } = useData<IPokemons>('getPokemons', query, [debouncedValue]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
-    setQuery((s) => ({
-      ...s,
+    setQuery((state: IQuery) => ({
+      ...state,
       name: e.target.value,
     }));
   };
@@ -32,26 +39,25 @@ const PokedexPage = () => {
     <>
       <Layout className={s.root}>
         <Heading size="l" className={s.title}>
-          {!isLoading && data.total} <b>Pokemons</b> for you to choose your favorite
+          {!isLoading && data && data.total} <b>Pokemons</b> for you to choose your favorite
         </Heading>
         <div>
           <input type="text" value={searchValue} onChange={handleSearchChange} />
         </div>
         <div>
           {!isLoading &&
-            data.pokemons.map(
-              (item: { name: string; stats: { attack: number; defense: number }; types: object[]; img: string }) => (
-                <PokemonCard
-                  name={item.name}
-                  attack={item.stats.attack}
-                  defense={item.stats.defense}
-                  types={item.types.map((el) => (
-                    <span>{el}</span>
-                  ))}
-                  img={item.img}
-                />
-              ),
-            )}
+            data &&
+            data.pokemons.map((item: PokemonsRequest) => (
+              <PokemonCard
+                name={item.name}
+                attack={item.stats.attack}
+                defense={item.stats.defense}
+                types={item.types.map((el) => (
+                  <span>{el}</span>
+                ))}
+                img={item.img}
+              />
+            ))}
         </div>
       </Layout>
     </>
