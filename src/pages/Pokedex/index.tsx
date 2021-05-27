@@ -1,3 +1,4 @@
+import { A, usePath } from 'hookrouter';
 import React, { useState } from 'react';
 import Heading from '../../components/Heading';
 import Layout from '../../components/Layout';
@@ -16,6 +17,7 @@ const PokedexPage = () => {
   const [searchValue, setSearchValue] = useState('');
   const [query, setQuery] = useState<IQuery>({});
   const debouncedValue = useDebounce(searchValue, 500);
+  const path = usePath();
 
   const { data, isLoading, isError } = useData<IPokemons>('getPokemons', query, [debouncedValue]);
 
@@ -48,15 +50,17 @@ const PokedexPage = () => {
           {!isLoading &&
             data &&
             data.pokemons.map((item: PokemonsRequest) => (
-              <PokemonCard
-                name={item.name}
-                attack={item.stats.attack}
-                defense={item.stats.defense}
-                types={item.types.map((el) => (
-                  <span>{el}</span>
-                ))}
-                img={item.img}
-              />
+              <A href={`${path}/${item.id}`}>
+                <PokemonCard
+                  name={item.name}
+                  attack={item.stats.attack}
+                  defense={item.stats.defense}
+                  types={item.types.map((el) => (
+                    <span>{el}</span>
+                  ))}
+                  img={item.img}
+                />
+              </A>
             ))}
         </div>
       </Layout>
