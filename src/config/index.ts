@@ -1,3 +1,10 @@
+// eslint-disable-next-line no-shadow
+export enum configEndpoint {
+  getPokemon = 'getPokemon',
+  getPokemons = 'getPokemons',
+  getPokemonTypes = 'getPokemonTypes',
+}
+
 export const config = {
   client: {
     server: {
@@ -5,13 +12,13 @@ export const config = {
       host: 'zar.hosthot.ru',
     },
     endpoint: {
-      getPokemons: {
+      [configEndpoint.getPokemons]: {
         method: 'GET',
         uri: {
           pathname: '/api/v1/pokemons',
         },
       },
-      getPokemon: {
+      [configEndpoint.getPokemon]: {
         method: 'GET',
         uri: {
           pathname: '/api/v1/pokemon/{id}',

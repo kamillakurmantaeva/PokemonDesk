@@ -1,25 +1,37 @@
+import cn from 'classnames';
 import { A, usePath } from 'hookrouter';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Heading from '../../components/Heading';
 import Layout from '../../components/Layout';
 import PokemonCard from '../../components/PokemonCard';
+import { configEndpoint } from '../../config';
 import useData from '../../hook/getData';
 import useDebounce from '../../hook/useDebounce';
 import { IPokemons, PokemonsRequest } from '../../interface/pokemons';
+import { getPokemonsTypes, getPokemonsTypesLoading, getTypesAction } from '../../store/pokemons';
 
 import s from './Pokedex.module.scss';
 
 interface IQuery {
+  limit: number;
   name?: string;
 }
 
 const PokedexPage = () => {
+  const dispatch = useDispatch();
+  const types = useSelector(getPokemonsTypes);
+  const isTypesLoading = useSelector(getPokemonsTypesLoading);
   const [searchValue, setSearchValue] = useState('');
-  const [query, setQuery] = useState<IQuery>({});
+  const [query, setQuery] = useState<IQuery>({ limit: 12 });
   const debouncedValue = useDebounce(searchValue, 500);
   const path = usePath();
 
-  const { data, isLoading, isError } = useData<IPokemons>('getPokemons', query, [debouncedValue]);
+  const { data, isLoading, isError } = useData<IPokemons>(configEndpoint.getPokemon, query, [debouncedValue]);
+
+  useEffect(() => {
+    dispatch(getTypesAction());
+  }, [dispatch]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -28,10 +40,6 @@ const PokedexPage = () => {
       name: e.target.value,
     }));
   };
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
 
   if (isError) {
     return <div>Something wrong!</div>;
@@ -46,7 +54,9 @@ const PokedexPage = () => {
         <div>
           <input type="text" value={searchValue} onChange={handleSearchChange} />
         </div>
-        <div>
+        <div>{isTypesLoading ? <Loader /> : types?.map((item) => <div>{item}</div>)}</div>
+        <div className={cn(s.wrapper, { [s.isLoading]: isLoading })}>
+          {isLoading && <Loader />}
           {!isLoading &&
             data &&
             data.pokemons.map((item: PokemonsRequest) => (
